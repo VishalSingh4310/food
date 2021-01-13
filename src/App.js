@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import MainScreen from "./pages/MainScreen";
+import SecondScreen from "./pages/SecondScreen";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import foodReducer from "./store/food_reducer";
+import Reduxthunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 function App() {
+  const rootReducer = combineReducers({
+    food: foodReducer,
+  });
+
+  const store = createStore(
+    rootReducer,
+    composeWithDevTools(applyMiddleware(Reduxthunk))
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Provider store={store}>
+          <Route path="/" component={MainScreen} exact />
+          <Route path="/category" component={SecondScreen} />
+        </Provider>
+      </Switch>
+    </Router>
   );
 }
 
